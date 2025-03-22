@@ -1,82 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vulnerable Login - SQL Injection Demo</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">SQL Injection Demo</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/login">Vulnerable Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login_safe">Safe Login</a>
-                    </li>
-                    <!-- <li class="nav-item"> -->
-                    <!--     <a class="nav-link" href="/products">Products Search</a> -->
-                    <!-- </li> -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="/how-it-works">How It Works</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+{% extends "base.html" %}
 
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-6 offset-md-3">
-                <div class="card">
-                    <div class="card-header bg-danger text-white">
-                        <h5 class="mb-0">Vulnerable Login Form</h5>
-                    </div>
-                    <div class="card-body">
-                        {% with messages = get_flashed_messages(with_categories=true) %}
-                            {% if messages %}
-                                {% for category, message in messages %}
-                                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                                {% endfor %}
-                            {% endif %}
-                        {% endwith %}
-                        
-                        <form method="post">
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username:</label>
-                                <input type="text" class="form-control" id="username" name="username" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password:</label>
-                                <input type="password" class="form-control" id="password" name="password" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Login</button>
-                        </form>
-                        
-                        <div class="mt-4">
-                            <div class="alert alert-warning">
-                                <strong>Try SQL Injection:</strong> Use <code>admin' -- OR 1=1'</code> as username and any password.
-                            </div>
-                            <p>This login form is vulnerable to SQL injection because it directly concatenates user input into the SQL query without sanitization.</p>
-                            <p>The vulnerable code looks like this:</p>
-                            <pre><code>query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"</code></pre>
-                        </div>
-                    </div>
+{% block title %}{{ g.get_text('vulnerable_login') }} - {{ g.get_text('app_name') }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">{{ g.get_text('vulnerable_login') }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i> This login form is vulnerable to SQL injection attacks.
                 </div>
+                
+                <form method="post" action="{{ url_for('login_vulnerable') }}">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">{{ g.get_text('username') }}</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">{{ g.get_text('password') }}</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">{{ g.get_text('login') }}</button>
+                </form>
             </div>
         </div>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    
