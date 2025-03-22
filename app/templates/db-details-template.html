@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+
+{% block title %}{{ g.get_text('db_details') }} - {{ g.get_text('app_name') }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">{{ g.get_text('db_details') }}</h5>
+    </div>
+    <div class="card-body">
+        <h2>{{ g.get_text('table_structure') }}</h2>
+        
+        <!-- Users Table -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">{{ g.get_text('users_table') }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>{{ g.get_text('column') }}</th>
+                                <th>{{ g.get_text('data_type') }}</th>
+                                <th>{{ g.get_text('description') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>id</code></td>
+                                <td>INTEGER</td>
+                                <td>{{ g.get_text('primary_key') }}</td>
+                            </tr>
+                            <tr>
+                                <td><code>username</code></td>
+                                <td>TEXT</td>
+                                <td>User login name</td>
+                            </tr>
+                            <tr>
+                                <td><code>password</code></td>
+                                <td>TEXT</td>
+                                <td>User password (stored in plaintext for demonstration)</td>
+                            </tr>
+                            <tr>
+                                <td><code>email</code></td>
+                                <td>TEXT</td>
+                                <td>User email address</td>
+                            </tr>
+                            <tr>
+                                <td><code>is_admin</code></td>
+                                <td>INTEGER</td>
+                                <td>1 for admin users, 0 for regular users</td>
+                            </tr>
+                            <tr>
+                                <td><code>last_login</code></td>
+                                <td>TEXT</td>
+                                <td>Timestamp of the last successful login</td>
+                            </tr>
+                            <tr>
+                                <td><code>login_attempts</code></td>
+                                <td>INTEGER</td>
+                                <td>Number of failed login attempts</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h6 class="mt-3">Sample Data:</h6>
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>username</th>
+                                <th>password</th>
+                                <th>email</th>
+                                <th>is_admin</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>admin</td>
+                                <td>admin123</td>
+                                <td>admin@example.com</td>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>alice</td>
+                                <td>alice123</td>
+                                <td>alice@example.com</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>bob</td>
+                                <td>bob123</td>
+                                <td>bob@example.com</td>
+                                <td>0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Products Table -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">{{ g.get_text('products_table') }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>{{ g.get_text('column') }}</th>
+                                <th>{{ g.get_text('data_type') }}</th>
+                                <th>{{ g.get_text('description') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>id</code></td>
+                                <td>INTEGER</td>
+                                <td>{{ g.get_text('primary_key') }}</td>
+                            </tr>
+                            <tr>
+                                <td><code>name</code></td>
+                                <td>TEXT</td>
+                                <td>Product name</td>
+                            </tr>
+                            <tr>
+                                <td><code>description</code></td>
+                                <td>TEXT</td>
+                                <td>Product description</td>
+                            </tr>
+                            <tr>
+                                <td><code>price</code></td>
+                                <td>REAL</td>
+                                <td>Product price</td>
+                            </tr>
+                            <tr>
+                                <td><code>stock</code></td>
+                                <td>INTEGER</td>
+                                <td>Number of items in stock</td>
+                            </tr>
+                            <tr>
+                                <td><code>category</code></td>
+                                <td>TEXT</td>
+                                <td>Product category</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h6 class="mt-3">Sample Data:</h6>
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>id</th>
+                                <th>name</th>
+                                <th>description</th>
+                                <th>price</th>
+                                <th>category</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Laptop</td>
+                                <td>High-performance laptop</td>
+                                <td>999.99</td>
+                                <td>Electronics</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Smartphone</td>
+                                <td>Latest smartphone model</td>
+                                <td>699.99</td>
+                                <td>Electronics</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Tablet</td>
+                                <td>10-inch tablet</td>
+                                <td>349.99</td>
+                                <td>Electronics</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Audit Log Table -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Audit Log Table</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>{{ g.get_text('column') }}</th>
+                                <th>{{ g.get_text('data_type') }}</th>
+                                <th>{{ g.get_text('description') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>id</code></td>
+                                <td>INTEGER</td>
+                                <td>{{ g.get_text('primary_key') }}</td>
+                            </tr>
+                            <tr>
+                                <td><code>action</code></td>
+                                <td>TEXT</td>
+                                <td>Type of action (login, logout, etc.)</td>
+                            </tr>
+                            <tr>
+                                <td><code>username</code></td>
+                                <td>TEXT</td>
+                                <td>Username associated with the action</td>
+                            </tr>
+                            <tr>
+                                <td><code>timestamp</code></td>
+                                <td>TEXT</td>
+                                <td>When the action occurred</td>
+                            </tr>
+                            <tr>
+                                <td><code>ip_address</code></td>
+                                <td>TEXT</td>
+                                <td>IP address of the user</td>
+                            </tr>
+                            <tr>
+                                <td><code>details</code></td>
+                                <td>TEXT</td>
+                                <td>Additional information about the action</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="mt-4">SQL Injection Points in This Application</h2>
+        <div class="alert alert-danger">
+            <h5><i class="fas fa-exclamation-triangle"></i> Vulnerable Endpoints</h5>
+            <p>This demo application intentionally includes several SQL injection vulnerabilities:</p>
+            <ol>
+                <li>
+                    <strong>Vulnerable Login Form</strong><br>
+                    <code>login_vulnerable()</code> route uses string concatenation to build SQL queries
+                </li>
+                <li>
+                    <strong>Products Search</strong><br>
+                    <code>products_vulnerable()</code> route allows injection via both search parameter and sort parameter
+                </li>
+                <li>
+                    <strong>User Profile</strong><br>
+                    <code>dump_users_vulnerable()</code> route allows injection via ID parameter
+                </li>
+            </ol>
+        </div>
+        
+        <div class="alert alert-success mt-3">
+            <h5><i class="fas fa-shield-alt"></i> Secure Implementations</h5>
+            <p>For comparison, some endpoints have secure implementations:</p>
+            <ol>
+                <li>
+                    <strong>Safe Login Form</strong><br>
+                    <code>login_safe()</code> route uses parameterized queries with placeholders
+                </li>
+            </ol>
+        </div>
+    </div>
+</div>
+{% endblock %}
