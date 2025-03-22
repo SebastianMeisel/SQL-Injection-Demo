@@ -65,7 +65,7 @@
                         
                         <div class="mt-4">
                             <div class="alert alert-warning">
-                                <strong>Try SQL Injection:</strong> Use <code>' OR '1'='1</code> as username and any password.
+                                <strong>Try SQL Injection:</strong> Use <code>admin' -- OR 1=1'</code> as username and any password.
                             </div>
                             <p>This login form is vulnerable to SQL injection because it directly concatenates user input into the SQL query without sanitization.</p>
                             <p>The vulnerable code looks like this:</p>

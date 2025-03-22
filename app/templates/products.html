@@ -44,32 +44,28 @@
             {% endif %}
         {% endwith %}
         
-        <div class="card mb-4">
-            <div class="card-header bg-danger text-white">
-                <h5 class="mb-0">Products Search (Vulnerable)</h5>
-            </div>
-            <div class="card-body">
-                <form method="get" class="mb-4">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <input type="text" class="form-control" name="search" placeholder="Search products..." value="{{ search }}">
-                                <button class="btn btn-outline-primary" type="submit">Search</button>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <label class="input-group-text">Sort By</label>
-                                <select class="form-select" name="sort" onchange="this.form.submit()">
-                                    <option value="id" {% if sort == 'id' %}selected{% endif %}>ID</option>
-                                    <option value="name" {% if sort == 'name' %}selected{% endif %}>Name</option>
-                                    <option value="price" {% if sort == 'price' %}selected{% endif %}>Price</option>
-                                </select>
-                            </div>
-                        </div>
+<div class="card mb-4">
+    <div class="card-header bg-danger text-white">
+        <h5 class="mb-0">Products Search (Vulnerable)</h5>
+    </div>
+    <div class="card-body">
+        <form method="get" class="mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="search" placeholder="Search products..." value="{{ search }}">
+                        <button class="btn btn-outline-primary" type="submit">Search</button>
                     </div>
-                </form>
-                
+                </div>
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <label class="input-group-text">Sort By</label>
+                        <input type="text" class="form-control" name="sort" value="{{ sort }}" placeholder="Enter sort column (e.g., id, name, price)">
+                        <button class="btn btn-outline-primary" type="submit">Apply Sort</button>
+                    </div>
+                </div>
+            </div>
+        </form>                
                 <div class="alert alert-warning">
                     <strong>Try SQL Injection:</strong> In the sort dropdown, try: <code>id, (SELECT password FROM users WHERE is_admin=1)</code>
                 </div>
