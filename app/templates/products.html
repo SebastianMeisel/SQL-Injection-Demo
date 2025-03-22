@@ -1,49 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products - SQL Injection Demo</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">SQL Injection Demo</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login">Vulnerable Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login_safe">Safe Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/products">Products Search</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/how-it-works">How It Works</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container mt-4">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        
 <div class="card mb-4">
     <div class="card-header bg-danger text-white">
         <h5 class="mb-0">Products Search (Vulnerable)</h5>
@@ -65,40 +19,50 @@
                     </div>
                 </div>
             </div>
-        </form>                
-                <div class="alert alert-warning">
-                    <strong>Try SQL Injection:</strong> In the sort dropdown, try: <code>id, (SELECT password FROM users WHERE is_admin=1)</code>
-                </div>
+        </form>
                 
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for product in products %}
-                        <tr>
-                            <td>{{ product['id'] }}</td>
-                            <td>{{ product['name'] }}</td>
-                            <td>{{ product['description'] }}</td>
-                            <td>${{ '%.2f'|format(product['price']) }}</td>
-                        </tr>
+        <div class="alert alert-warning">
+            <strong>Try SQL Injection:</strong> In the sort field, try: <code>id, (SELECT password FROM users WHERE is_admin=1) as admin_password</code>
+        </div>
+        
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Injection Result</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product['id'] if 'id' in product else 'N/A' }}</td>
+                    <td>{{ product['name'] if 'name' in product else 'N/A' }}</td>
+                    <td>{{ product['description'] if 'description' in product else 'N/A' }}</td>
+                    <td>{% if 'price' in product %}${{ '%.2f'|format(product['price']) }}{% else %}N/A{% endif %}</td>
+                    <td>
+                        <!-- Display all columns that aren't standard product fields -->
+                        {% for key, value in product.items() %}
+                            {% if key not in ['id', 'name', 'description', 'price'] %}
+                                <strong>{{ key }}:</strong> {{ value }}<br>
+                            {% endif %}
                         {% endfor %}
-                    </tbody>
-                </table>
-                
-                <div class="mt-4">
-                    <p>This product search is vulnerable to SQL injection in the sort parameter:</p>
-                    <pre><code>query = f"SELECT * FROM products ORDER BY {sort}"</code></pre>
-                </div>
-            </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div class="mt-4">
+            <p>This product search is vulnerable to SQL injection in the sort parameter:</p>
+            <pre><code>query = f"SELECT * FROM products ORDER BY {sort}"</code></pre>
+            <p>Try these SQL injections in the sort field:</p>
+            <ul>
+                <li><code>id, (SELECT password FROM users WHERE is_admin=1) as admin_password</code></li>
+                <li><code>id, (SELECT group_concat(username || ':' || password) FROM users) as all_credentials</code></li>
+            </ul>
         </div>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+</div>
