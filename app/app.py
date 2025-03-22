@@ -145,7 +145,8 @@ def products_vulnerable():
     
     try:
         cursor.execute(query)
-        products = cursor.fetchall()
+        # Convert sqlite3.Row objects to dictionaries
+        products = [dict(row) for row in cursor.fetchall()]
     except sqlite3.Error as e:
         flash(f'Error: {str(e)}', 'danger')
         products = []
@@ -153,7 +154,6 @@ def products_vulnerable():
         conn.close()
         
     return render_template('products.html', products=products, search=search, sort=sort)
-
 
 @app.route('/users')
 def dump_users_vulnerable():
