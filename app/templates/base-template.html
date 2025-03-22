@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="{{ g.get_locale() }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ g.get_text('app_name') }}{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .language-selector {
+            margin-left: 1rem;
+        }
+        .sql-code {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            font-family: monospace;
+            margin-bottom: 1rem;
+        }
+        .result-display {
+            background-color: #f0f0f0;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            font-family: monospace;
+            border-left: 3px solid #007bff;
+        }
+        .attack-technique {
+            margin-bottom: 2rem;
+        }
+        .sidebar-nav {
+            position: sticky;
+            top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">{{ g.get_text('app_name') }}</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">{{ g.get_text('home') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/login' %}active{% endif %}" href="/login">{{ g.get_text('vulnerable_login') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/login_safe' %}active{% endif %}" href="/login_safe">{{ g.get_text('safe_login') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/products' %}active{% endif %}" href="/products">{{ g.get_text('products_search') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/how-it-works' %}active{% endif %}" href="/how-it-works">{{ g.get_text('how_it_works') }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/db-details' %}active{% endif %}" href="/db-details">{{ g.get_text('db_details') }}</a>
+                    </li>
+                </ul>
+                <div class="dropdown ms-auto language-selector">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ g.get_text('language') }}: {{ g.languages[g.get_locale()] }}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                        {% for code, name in g.languages.items() %}
+                        <li><a class="dropdown-item {% if g.get_locale() == code %}active{% endif %}" href="{{ url_for('set_language', language=code) }}">{{ name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
