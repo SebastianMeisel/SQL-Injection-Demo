@@ -9,7 +9,7 @@
             </div>
             <div class="card-body">
                 <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle"></i> This login form is vulnerable to SQL injection attacks.
+                    <i class="fas fa-exclamation-triangle"></i> {{ g.get_text('sql_injection_warning') }}
                 </div>
                 
                 <form method="post" action="{{ url_for('login_vulnerable') }}">
@@ -46,7 +46,7 @@
                 
                 <p>{{ g.get_text('educational_purpose_only') }}</p>
                 
-                <a href="{{ url_for('login_secure') }}" class="btn btn-success">
+                <a href="{{ url_for('login_safe') }}" class="btn btn-success">
                     <i class="fas fa-shield-alt"></i> {{ g.get_text('try_secure_login') }}
                 </a>
             </div>
