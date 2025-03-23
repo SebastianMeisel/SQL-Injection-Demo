@@ -78,7 +78,17 @@ TRANSLATIONS = {
         'vulnerability_types': 'Types of SQL Injection Vulnerabilities',
         'error_based': 'Error-Based',
         'time_based': 'Time-Based',
-        'out_of_band': 'Out-of-Band'
+        'out_of_band': 'Out-of-Band',
+        'sql_injection_warning': 'This login form is vulnerable to SQL injection attacks.',
+        'sql_injection_info': 'SQL Injection Information',
+        'sql_injection_explanation': 'SQL injection is a code injection technique that exploits a security vulnerability in an application\'s software. It allows attackers to inject malicious SQL statements that can read, modify, or delete data from your database.',
+        'examples': 'Examples',
+        'educational_purpose_only': 'For educational purposes only. Never use these techniques on real applications.',
+        'try_secure_login': 'Try Secure Login',
+        'prevention_tips': 'Prevention Tips',
+        'use_parameterized_queries': 'Use parameterized queries',
+        'least_privilege_principle': 'Apply the principle of least privilege',
+        'use_orm': 'Use ORM frameworks',
     },
     'de': {
         'app_name': 'SQL-Injection Demo',
@@ -143,7 +153,17 @@ TRANSLATIONS = {
         'vulnerability_types': 'Arten von SQL-Injection-Schwachstellen',
         'error_based': 'Fehlerbasiert',
         'time_based': 'Zeitbasiert',
-        'out_of_band': 'Out-of-Band'
+        'out_of_band': 'Out-of-Band',
+        'sql_injection_warning': 'Dieses Anmeldeformular ist anfällig für SQL-Injection-Angriffe.',
+        'sql_injection_info': 'SQL-Injection Informationen',
+        'sql_injection_explanation': 'SQL-Injection ist eine Code-Injektionstechnik, die eine Sicherheitslücke in der Software einer Anwendung ausnutzt. Sie ermöglicht Angreifern, bösartige SQL-Anweisungen einzufügen, die Daten aus Ihrer Datenbank lesen, ändern oder löschen können.',
+        'examples': 'Beispiele',
+        'educational_purpose_only': 'Nur für Bildungszwecke. Verwenden Sie diese Techniken niemals bei echten Anwendungen.',
+        'try_secure_login': 'Sicheres Login ausprobieren',
+        'prevention_tips': 'Präventionstipps',
+        'use_parameterized_queries': 'Verwenden Sie parametrisierte Abfragen',
+        'least_privilege_principle': 'Wenden Sie das Prinzip der geringsten Berechtigung an',
+        'use_orm': 'Verwenden Sie ORM-Frameworks'
     }
 }
 
