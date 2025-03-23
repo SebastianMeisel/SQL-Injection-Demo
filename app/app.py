@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 import sqlite3
 import os
 from functools import wraps
-import multilang
+from multilang import get_text, get_locale, LANGUAGES
 
 app = Flask(__name__)
 app.secret_key = 'vulnerable_secret_key'
