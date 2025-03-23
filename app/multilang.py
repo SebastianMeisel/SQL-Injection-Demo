@@ -1,3 +1,5 @@
+from flask import session
+
 # Available languages
 LANGUAGES = {
     'en': 'English',
