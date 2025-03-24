@@ -1,3 +1,8 @@
+{% extends "base.html" %}
+
+{% block title %}{{ g.get_text('how_it_works') }} - {{ g.get_text('app_name') }}{% endblock %}
+
+{% block content %}
 <div class="card mb-4">
     <div class="card-header bg-success text-white">
         <h5 class="mb-0">Products Search (Secure)</h5>
@@ -71,3 +76,4 @@ if sort in allowed_sort_columns:
         </div>
     </div>
 </div>
+{% endblock %}
