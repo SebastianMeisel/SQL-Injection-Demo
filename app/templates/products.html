@@ -1,6 +1,6 @@
 <div class="card mb-4">
-    <div class="card-header bg-danger text-white">
-        <h5 class="mb-0">Products Search (Vulnerable)</h5>
+    <div class="card-header bg-success text-white">
+        <h5 class="mb-0">Products Search (Secure)</h5>
     </div>
     <div class="card-body">
         <form method="get" class="mb-4">
@@ -14,15 +14,19 @@
                 <div class="col-md-6">
                     <div class="input-group">
                         <label class="input-group-text">Sort By</label>
-                        <input type="text" class="form-control" name="sort" value="{{ sort }}" placeholder="Enter sort column (e.g., id, name, price)">
+                        <select class="form-control" name="sort">
+                            <option value="id" {% if sort == 'id' %}selected{% endif %}>ID</option>
+                            <option value="name" {% if sort == 'name' %}selected{% endif %}>Name</option>
+                            <option value="price" {% if sort == 'price' %}selected{% endif %}>Price</option>
+                        </select>
                         <button class="btn btn-outline-primary" type="submit">Apply Sort</button>
                     </div>
                 </div>
             </div>
         </form>
-                
-        <div class="alert alert-warning">
-            <strong>Try SQL Injection:</strong> In the sort field, try: <code>id, (SELECT password FROM users WHERE is_admin=1) as admin_password</code>
+        
+        <div class="alert alert-info">
+            <strong>Security Note:</strong> This product search is protected against SQL injection by using parameterized queries and input validation.
         </div>
         
         <table class="table table-striped">
@@ -32,7 +36,6 @@
                     <th>Name</th>
                     <th>Description</th>
                     <th>Price</th>
-                    <th>Injection Result</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,27 +45,29 @@
                     <td>{{ product['name'] if 'name' in product else 'N/A' }}</td>
                     <td>{{ product['description'] if 'description' in product else 'N/A' }}</td>
                     <td>{% if 'price' in product %}${{ '%.2f'|format(product['price']) }}{% else %}N/A{% endif %}</td>
-                    <td>
-                        <!-- Display all columns that aren't standard product fields -->
-                        {% for key, value in product.items() %}
-                            {% if key not in ['id', 'name', 'description', 'price'] %}
-                                <strong>{{ key }}:</strong> {{ value }}<br>
-                            {% endif %}
-                        {% endfor %}
-                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         
-        <div class="mt-4">
-            <p>This product search is vulnerable to SQL injection in the sort parameter:</p>
-            <pre><code>query = f"SELECT * FROM products ORDER BY {sort}"</code></pre>
-            <p>Try these SQL injections in the sort field:</p>
-            <ul>
-                <li><code>id, (SELECT password FROM users WHERE is_admin=1) as admin_password</code></li>
-                <li><code>id, (SELECT group_concat(username || ':' || password) FROM users) as all_credentials</code></li>
-            </ul>
+        <div class="mt-4 card bg-light">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">Prevention Tips</h5>
+            </div>
+            <div class="card-body">
+                <p>This product search is protected against SQL injection by:</p>
+                <ul>
+                    <li>Using parameterized queries instead of string concatenation</li>
+                    <li>Implementing proper input validation (allowlist approach)</li>
+                    <li>Limiting sort options to predefined values using a dropdown selection</li>
+                    <li>Following the principle of least privilege for database access</li>
+                </ul>
+                <p>Secure implementation example:</p>
+                <pre><code>allowed_sort_columns = ['id', 'name', 'price']
+if sort in allowed_sort_columns:
+    query = "SELECT * FROM products ORDER BY ?"
+    cursor.execute(query, (sort,))</code></pre>
+            </div>
         </div>
     </div>
 </div>
